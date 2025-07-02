@@ -2,8 +2,18 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { ArrowLeft, FileText, Plus, Settings, CheckCircle2, AlertCircle } from "lucide-react"
+import { FileText, Plus, Settings, CheckCircle2, AlertCircle } from "lucide-react"
 import Link from "next/link"
+import { SidebarTrigger } from "@/components/ui/sidebar"
+import { Separator } from "@/components/ui/separator"
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb"
 
 const entityData = {
   doh: {
@@ -138,37 +148,39 @@ export default function EntityPage({ params }: { params: { id: string } }) {
   const entity = entityData[params.id as keyof typeof entityData] || entityData.doh
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="border-b bg-white">
-        <div className="container mx-auto px-4 py-6">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-4">
-              <Link href="/">
-                <Button variant="ghost" size="sm">
-                  <ArrowLeft className="w-4 h-4 mr-2" />
-                  Back to Dashboard
-                </Button>
-              </Link>
-              <div>
-                <h1 className="text-3xl font-bold text-gray-900">{entity.acronym}</h1>
-                <p className="text-gray-600 mt-1">{entity.name}</p>
-              </div>
-            </div>
-            <div className="flex space-x-2">
-              <Button variant="outline">
-                <Settings className="w-4 h-4 mr-2" />
-                Template Settings
-              </Button>
-              <Button>
-                <Plus className="w-4 h-4 mr-2" />
-                New Project
-              </Button>
-            </div>
-          </div>
+    <>
+      <header className="flex h-16 shrink-0 items-center gap-2 border-b px-4">
+        <SidebarTrigger className="-ml-1" />
+        <Separator orientation="vertical" className="mr-2 h-4" />
+        <Breadcrumb>
+          <BreadcrumbList>
+            <BreadcrumbItem>
+              <BreadcrumbLink href="/entities">Entities</BreadcrumbLink>
+            </BreadcrumbItem>
+            <BreadcrumbSeparator />
+            <BreadcrumbItem>
+              <BreadcrumbPage>{entity.acronym}</BreadcrumbPage>
+            </BreadcrumbItem>
+          </BreadcrumbList>
+        </Breadcrumb>
+        <div className="ml-auto flex space-x-2">
+          <Button variant="outline">
+            <Settings className="w-4 h-4 mr-2" />
+            Template Settings
+          </Button>
+          <Button>
+            <Plus className="w-4 h-4 mr-2" />
+            New Project
+          </Button>
         </div>
-      </div>
+      </header>
 
-      <div className="container mx-auto px-4 py-8">
+      <div className="flex flex-1 flex-col gap-4 p-4">
+        <div>
+          <h1 className="text-3xl font-bold tracking-tight">{entity.name}</h1>
+          <p className="text-muted-foreground">{entity.description}</p>
+        </div>
+
         <Tabs defaultValue="projects" className="space-y-6">
           <TabsList>
             <TabsTrigger value="projects">Projects</TabsTrigger>
@@ -230,7 +242,7 @@ export default function EntityPage({ params }: { params: { id: string } }) {
                         </div>
                       </div>
                       <div className="flex justify-end">
-                        <Link href={`/entity/${params.id}/project/${project.id}`}>
+                        <Link href={`/entities/${params.id}/projects/${project.id}`}>
                           <Button size="sm">
                             <FileText className="w-4 h-4 mr-2" />
                             View Details
@@ -288,6 +300,6 @@ export default function EntityPage({ params }: { params: { id: string } }) {
           </TabsContent>
         </Tabs>
       </div>
-    </div>
+    </>
   )
 }
